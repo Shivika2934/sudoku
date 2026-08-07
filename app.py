@@ -19,17 +19,24 @@ DIFFICULTY_CLUES = {
 def index():
     return render_template('index.html')
 
-@app.route('/new')
+@app.route('/new', methods=['GET'])
 def new_game():
-    diff = request.args.get('difficulty', 'medium').lower()
-    clues = DIFFICULTY_CLUES.get(diff, 35)
-    puzzle, solution = sudoku_logic.generate_puzzle(clues)
+    difficulty = request.args.get('difficulty', 'medium')
+    clues_map = {'easy': 40, 'medium': 34, 'hard': 28}
+    clues = clues_map.get(difficulty, 34)
     
+    # Generate the puzzle and solution
+    puzzle, solution = sudoku_logic.generate_sudoku(difficulty)
+
+    # SAVE TO GLOBAL STATE
     CURRENT['puzzle'] = puzzle
     CURRENT['solution'] = solution
-    CURRENT['difficulty'] = diff
-    
-    return jsonify({'puzzle': puzzle, 'difficulty': diff})
+    CURRENT['difficulty'] = difficulty
+
+    return jsonify({
+        'puzzle': puzzle,
+        'solution': solution
+    })
 
 @app.route('/hint', methods=['GET'])
 def get_hint():
