@@ -1,8 +1,11 @@
+import threading
+import streamlit as st
 from flask import Flask, render_template, jsonify, request
 import sudoku_logic
 
 app = Flask(__name__)
 
+# Global game state store
 CURRENT = {
     'puzzle': None,
     'solution': None,
@@ -15,6 +18,8 @@ DIFFICULTY_CLUES = {
     'hard': 28
 }
 
+# --- Flask Routes ---
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -22,13 +27,11 @@ def index():
 @app.route('/new', methods=['GET'])
 def new_game():
     difficulty = request.args.get('difficulty', 'medium')
-    clues_map = {'easy': 40, 'medium': 34, 'hard': 28}
-    clues = clues_map.get(difficulty, 34)
     
     # Generate the puzzle and solution
     puzzle, solution = sudoku_logic.generate_sudoku(difficulty)
 
-    # SAVE TO GLOBAL STATE
+    # Save to global state for /hint and /check
     CURRENT['puzzle'] = puzzle
     CURRENT['solution'] = solution
     CURRENT['difficulty'] = difficulty
@@ -42,7 +45,7 @@ def new_game():
 def get_hint():
     solution = CURRENT.get('solution')
     puzzle = CURRENT.get('puzzle')
-    if not solution:
+    if not solution or not puzzle:
         return jsonify({'error': 'No active game'}), 400
         
     empty_cells = []
@@ -57,7 +60,7 @@ def get_hint():
     import random
     r, c = random.choice(empty_cells)
     val = solution[r][c]
-    puzzle[r][c] = val  # Lock in puzzle memory
+    puzzle[r][c] = val  # Update puzzle memory
     
     return jsonify({'row': r, 'col': c, 'val': val})
 
@@ -81,5 +84,18 @@ def check_solution():
                 
     return jsonify({'incorrect': incorrect, 'is_complete': is_complete})
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# --- Streamlit Cloud Deployment Wrapper ---
+
+def run_flask():
+    # Running with debug=False and use_reloader=False prevents background thread signal errors
+    app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False)
+
+# Start Flask in a background thread once per Streamlit session
+if "flask_thread" not in st.session_state:
+    thread = threading.Thread(target=run_flask, daemon=True)
+    thread.start()
+    st.session_state["flask_thread"] = thread
+
+# Streamlit Page Config & Embedded Frame
+st.set_page_config(page_title="Sudoku Game", layout="wide")
+st.components.v1.iframe("http://127.0.0.1:5000", height=850, scrolling=True)
