@@ -1,0 +1,7 @@
+{
+  "testing": "Write unit tests using pytest for python Flask endpoints and puzzle solving logic.",
+  "refactoring": "Refactor legacy python backend into modular, clean, PEP-8 compliant code.",
+  "styling": "Generate CSS using custom properties for theme dark/light modes and accessible contrast ratios following WCAG 2.1 AA.",
+  "accessibility": "Add proper ARIA attributes, keyboard navigation handlers, and high-contrast styling to make an interactive grid accessible.",
+  "feature_notes": "Implement a candidate notes/pencil mode in JavaScript for a Sudoku grid using subgrid elements."
+}

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sudoku</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1>Sudoku</h1>
+      <button id="theme-toggle" aria-label="Toggle Dark/Light Mode">🌙 Dark Mode</button>
+    </header>
+
+    <div class="dashboard" role="region" aria-label="Game Controls and Info">
+      <div class="control-group">
+        <label for="difficulty">Difficulty:</label>
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+        <button id="new-game">New Game</button>
+      </div>
+
+      <div class="timer-display" aria-live="polite">
+        Time: <span id="timer">00:00</span>
+      </div>
+    </div>
+
+    <!-- Number Tracker Toolbar -->
+    <div id="number-tracker" class="tracker-bar" aria-label="Number Tracker Controls" role="toolbar"></div>
+
+    <main>
+      <div id="sudoku-board" role="grid" aria-label="Sudoku Board Matrix"></div>
+
+      <!-- Action Buttons (Check & Hint beside extra features) -->
+      <div class="game-controls">
+        <button id="check-solution">Check</button>
+        <button id="hint-btn" class="hint-btn">Hint</button>
+        <button id="note-mode-toggle" aria-pressed="false">✏️ Note Mode: OFF</button>
+        <button id="solve-animation-btn">▶ Visual Solver</button>
+      </div>
+
+      <!-- Real-time Conflict & Status Warning Message -->
+      <div id="message" role="status" aria-live="assertive" class="status-message"></div>
+    </main>
+
+    <!-- Top 10 Leaderboard Table Persistent Section -->
+    <section class="scoreboard-section" aria-label="Top 10 Fastest Times Leaderboard">
+      <h2>Top 10 Fastest Times:</h2>
+      <table id="leaderboard-table" class="leaderboard-table">
+        <thead>
+          <tr>
+            <th scope="col">Rank</th>
+            <th scope="col">Name</th>
+            <th scope="col">Time</th>
+            <th scope="col">Level</th>
+            <th scope="col">Hints</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+          <!-- Populated dynamically via main.js from localStorage -->
+        </tbody>
+      </table>
+    </section>
+  </div>
+  <script src="/static/main.js"></script>
+</body>
+</html>

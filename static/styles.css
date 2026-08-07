@@ -1,0 +1,320 @@
+:root {
+    --bg-color: #f8fafc;
+    --text-color: #1e293b;
+    --border-color: #0f172a;
+    /* Thick 3x3 divider color */
+    --thin-border: #cbd5e1;
+    /* Cell border color */
+    --subgrid-a: #ffffff;
+    --subgrid-b: #e2e8f0;
+    /* Distinct background for alternating 3x3 blocks */
+    --cell-prefilled: #cbd5e1;
+    --cell-error: #dc2626;
+    --cell-error-bg: #fee2e2;
+    --highlight-digit: #fef08a;
+    --btn-bg: #2563eb;
+    --btn-text: #ffffff;
+    --hint-btn-bg: #10b981;
+    --table-header-bg: #dbeafe;
+    --table-header-text: #1e40af;
+    --focus-outline: #2563eb;
+}
+
+[data-theme="dark"] {
+    --bg-color: #0f172a;
+    --text-color: #f8fafc;
+    --border-color: #ffffff;
+    --thin-border: #334155;
+    --subgrid-a: #1e293b;
+    --subgrid-b: #334155;
+    --cell-prefilled: #475569;
+    --cell-error: #fca5a5;
+    --cell-error-bg: #7f1d1d;
+    --highlight-digit: #854d0e;
+    --btn-bg: #3b82f6;
+    --btn-text: #ffffff;
+    --hint-btn-bg: #059669;
+    --table-header-bg: #1e3a8a;
+    --table-header-text: #93c5fd;
+    --focus-outline: #60a5fa;
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.dashboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.timer-display {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.game-controls {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.top-right-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Number Tracker Bar */
+.tracker-bar {
+    display: flex;
+    justify-content: space-between;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.tracker-btn {
+    flex: 1;
+    padding: 4px 2px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border: 1px solid var(--thin-border);
+    background: var(--subgrid-a);
+    color: var(--text-color);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.tracker-btn.active {
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+}
+
+.tracker-btn.completed {
+    opacity: 0.4;
+    text-decoration: line-through;
+}
+
+/* Sudoku Board Grid */
+#sudoku-board {
+    display: grid;
+    grid-template-columns: repeat(9, 45px);
+    grid-template-rows: repeat(9, 45px);
+    width: fit-content;
+    margin: 0 auto;
+    border: 3px solid var(--border-color);
+}
+
+.sudoku-cell-container {
+    position: relative;
+    width: 45px;
+    height: 45px;
+    border-right: 1px solid var(--thin-border);
+    border-bottom: 1px solid var(--thin-border);
+    box-sizing: border-box;
+}
+
+.sudoku-cell-container:nth-child(3n) {
+    border-right: 3px solid var(--border-color);
+}
+
+.sudoku-cell-container:nth-child(9n) {
+    border-right: none;
+}
+
+.sudoku-cell-container:nth-child(n + 19):nth-child(-n + 27),
+.sudoku-cell-container:nth-child(n + 46):nth-child(-n + 54) {
+    border-bottom: 3px solid var(--border-color);
+}
+
+.sudoku-cell {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    background-color: var(--subgrid-a);
+    color: var(--text-color);
+    box-sizing: border-box;
+    padding: 0;
+}
+
+.sudoku-cell.block-alt {
+    background-color: var(--subgrid-b);
+}
+
+.sudoku-cell.prefilled {
+    background-color: var(--cell-prefilled);
+    font-weight: 800;
+}
+
+.sudoku-cell.hint-locked {
+    background-color: #a7f3d0 !important;
+    color: #064e3b !important;
+    font-weight: 800;
+}
+
+.sudoku-cell.highlighted {
+    background-color: var(--highlight-digit) !important;
+}
+
+.sudoku-cell.conflict {
+    background-color: var(--cell-error-bg) !important;
+    color: var(--cell-error) !important;
+    border: 2px solid var(--cell-error) !important;
+}
+
+.notes-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    pointer-events: none;
+    font-size: 0.6rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.note-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-message {
+    min-height: 24px;
+    margin-top: 10px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.status-message.error-text {
+    color: #dc2626;
+    background-color: #fee2e2;
+    border: 1px solid #fca5a5;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+button {
+    padding: 6px 14px;
+    border: none;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button.hint-btn {
+    background: var(--hint-btn-bg);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--focus-outline);
+    outline-offset: 1px;
+}
+
+/* Leaderboard Table Styles */
+.scoreboard-section {
+    margin-top: 20px;
+}
+
+.scoreboard-section h2 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    color: #1e3a8a;
+}
+
+[data-theme="dark"] .scoreboard-section h2 {
+    color: #93c5fd;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.leaderboard-table th {
+    background-color: var(--table-header-bg);
+    color: var(--table-header-text);
+    padding: 8px;
+    font-weight: bold;
+}
+
+.leaderboard-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--thin-border);
+}
+
+.leaderboard-table tbody tr:nth-child(even) {
+    background-color: var(--subgrid-b);
+}
+
+/* Modal Styling */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--bg-color);
+    color: var(--text-color);
+    padding: 24px 32px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    max-width: 380px;
+    width: 90%;
+}
