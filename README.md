@@ -2,7 +2,7 @@
 
 An interactive, web-based Sudoku puzzle application built with **Flask** and **Python**, with full support for local development and **Streamlit Cloud** deployment. Features dynamic board generation, uniqueness verification, interactive hints, and realtime solution validation.
 <img width="576" height="794" alt="image" src="https://github.com/user-attachments/assets/0aecfe8c-d5a8-4057-9757-77648a718c89" />
-
+web app- https://sudoku-hiwvhppcsyvjhr6dwq8sre.streamlit.app/
 ---
 
 ## ✨ Features
